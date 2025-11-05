@@ -8,7 +8,12 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./src:/var/www/html
+      - ./public:/app/public:ro  # Read-only
+      - ./src:/app/src:ro        # Read-only
+      - ./uploads:/app/uploads   # Writable for uploads
+    environment:
+      - TRINAX_BASE_URL=${TRINAX_BASE_URL}
+      - TRINAX_API_KEY=${TRINAX_API_KEY}
     depends_on:
       - db
 
