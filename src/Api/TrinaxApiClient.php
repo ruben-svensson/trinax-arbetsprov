@@ -1,18 +1,18 @@
 <?php
 namespace App\Api;
 
-use GuzzleHttp\Client;
+use Psr\Http\Client\ClientInterface;
 use GuzzleHttp\Psr7\Request;
 use App\Dto\WorkplaceDTO;
 use DateTimeImmutable;
 
 class TrinaxApiClient {
-    private Client $client;
+    private ClientInterface $client;
     private string $apiKey;
     private string $baseUrl;
 
-    public function __construct(string $apiKey, string $baseUrl) {
-        $this->client = new Client();
+    public function __construct(ClientInterface $client, string $apiKey, string $baseUrl) {
+        $this->client = $client;
         $this->apiKey = $apiKey;
         $this->baseUrl = $baseUrl;
     }

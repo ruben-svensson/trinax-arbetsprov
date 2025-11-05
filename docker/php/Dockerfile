@@ -2,7 +2,9 @@ FROM webdevops/php-nginx-dev:8.2
 WORKDIR /app
 
 COPY composer.json composer.lock* ./
-RUN composer install --no-dev --optimize-autoloader
+
+#--no-dev
+RUN composer install  --optimize-autoloader
 
 COPY src/ ./src/
 COPY public/ ./public/

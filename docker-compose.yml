@@ -12,6 +12,7 @@ services:
       - ./src:/app/src:ro        # Read-only
       - ./uploads:/app/uploads   # Writable for uploads
     environment:
+      - APP_ENV=${APP_ENV}
       - TRINAX_BASE_URL=${TRINAX_BASE_URL}
       - TRINAX_API_KEY=${TRINAX_API_KEY}
     depends_on:
