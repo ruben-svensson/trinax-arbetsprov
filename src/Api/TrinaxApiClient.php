@@ -21,75 +21,38 @@ class TrinaxApiClient {
      * @return WorkplaceDTO[]
      */
     public function getWorkplaces(): array {
-        $req = new Request('GET', $this->baseUrl . 'workplace', [
-            'Authorization' => 'bearer ' . $this->apiKey,
-            'Accept'        => 'application/json',
-        ]);
-
-        $res = $this->client->sendRequest($req);
-        $data = json_decode($res->getBody()->getContents(), true);
-
-        $workplaces = [];
-        foreach ($data as $workplaceData){
-            $workplaces[] = WorkplaceDTO::fromArray($workplaceData);
-        }
-
-        return $workplaces;
+        $data = $this->sendRequest('GET', 'workplace');
+        return array_map(fn($item) => WorkplaceDTO::fromArray($item), $data);
     }
 
     /**
      * @return TimeReportDTO[]
      */
     public function getTimeReports(?TimeReportFilterOptions $filter = null): array {
-        $queryParams = [];
+        $queryParams = $filter?->toQueryParams() ?? [];
+        $data = $this->sendRequest('GET', 'timereport', $queryParams);
 
-        if ($filter) {
-            if ($filter->workplaceId !== null) {
-                $queryParams['workplaceId'] = $filter->workplaceId;
-            }
-            if ($filter->fromDate !== null) {
-                $queryParams['fromDate'] = $filter->fromDate->format('Y-m-d');
-            }
-            if ($filter->toDate !== null) {
-                $queryParams['toDate'] = $filter->toDate->format('Y-m-d');
-            }
-        }
+        return array_map(fn($item) => TimereportDTO::fromArray($item), $data);
+    }
 
-        
-        $url = $this->baseUrl . 'timereport';
+    public function getTimeReport(int $id): ?TimeReportDTO {
+        $data = $this->sendRequest('GET', 'timereport/' . $id);
+
+        return TimereportDTO::fromArray($data);
+    }
+
+    private function sendRequest(string $method, string $endpoint, array $queryParams = []): array {
+        $url = $this->baseUrl . $endpoint;
         if (!empty($queryParams)) {
             $url .= '?' . http_build_query($queryParams);
         }
 
-        $req = new Request('GET', $url, [
+        $req = new Request($method, $url, [
             'Authorization' => 'bearer ' . $this->apiKey,
             'Accept'        => 'application/json',
         ]);
 
         $res = $this->client->sendRequest($req);
-        $data = json_decode($res->getBody()->getContents(), true);
-
-        $timeReports = [];
-        foreach ($data as $reportData) {
-            $timeReports[] = TimereportDTO::fromArray($reportData);
-        }
-
-        return $timeReports;
-    }
-
-    public function getTimeReport(int $id): ?TimeReportDTO {
-        $req = new Request('GET', $this->baseUrl . 'timereport/' . $id, [
-            'Authorization' => 'bearer ' . $this->apiKey,
-            'Accept'        => 'application/json',
-        ]);
-
-        $res = $this->client->sendRequest($req);
-        if ($res->getStatusCode() === 404) {
-            return null;
-        }
-
-        $data = json_decode($res->getBody()->getContents(), true);
-
-        return TimereportDTO::fromArray($data);
+        return json_decode($res->getBody()->getContents(), true);
     }
 }
