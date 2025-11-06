@@ -9,4 +9,12 @@ final class TimeReportFilterOptions {
         public readonly ?DateTimeImmutable $fromDate = null,
         public readonly ?DateTimeImmutable $toDate = null
     ) {}
+
+    public function toQueryParams(): array {
+        return array_filter([
+            'workplaceId' => $this->workplaceId,
+            'fromDate'    => $this->fromDate ? $this->fromDate->format('Y-m-d') : null,
+            'toDate'      => $this->toDate ? $this->toDate->format('Y-m-d') : null,
+        ]);
+    }
 }
