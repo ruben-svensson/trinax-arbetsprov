@@ -9,8 +9,4 @@ final class TimeReportFilterOptions {
         public readonly ?DateTimeImmutable $fromDate = null,
         public readonly ?DateTimeImmutable $toDate = null
     ) {}
-
-    public static function create(?int $workplaceId, ?DateTimeImmutable $fromDate, ?DateTimeImmutable $toDate): TimeReportFilterOptions {
-        return new self($workplaceId, $fromDate, $toDate);
-    }
 }

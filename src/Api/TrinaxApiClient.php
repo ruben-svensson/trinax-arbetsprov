@@ -7,17 +7,15 @@ use DateTimeImmutable;
 use App\Options\TimeReportFilterOptions;
 use App\Dto\TimereportDTO;
 use App\Dto\WorkplaceDTO;
+use DI\Attribute\Inject;
 
 class TrinaxApiClient {
-    private ClientInterface $client;
-    private string $apiKey;
-    private string $baseUrl;
 
-    public function __construct(ClientInterface $client, string $apiKey, string $baseUrl) {
-        $this->client = $client;
-        $this->apiKey = $apiKey;
-        $this->baseUrl = $baseUrl;
-    }
+    public function __construct(
+        private ClientInterface $client,
+        #[Inject('api.key')] private string $apiKey,
+        #[Inject('api.baseUrl')] private string $baseUrl
+    ) {}
 
     /**
      * @return WorkplaceDTO[]
@@ -33,13 +31,7 @@ class TrinaxApiClient {
 
         $workplaces = [];
         foreach ($data as $workplaceData){
-            $workplace = WorkplaceDTO::create(
-                $workplaceData['id'],
-                $workplaceData['name'],
-                new DateTimeImmutable($workplaceData['created_time'])
-            );
-
-            $workplaces[] = $workplace;
+            $workplaces[] = WorkplaceDTO::fromArray($workplaceData);
         }
 
         return $workplaces;
@@ -56,10 +48,10 @@ class TrinaxApiClient {
                 $queryParams['workplaceId'] = $filter->workplaceId;
             }
             if ($filter->fromDate !== null) {
-                $queryParams['fromDate'] = $filter->fromDate->format('YYYY-MM-DD');
+                $queryParams['fromDate'] = $filter->fromDate->format('Y-m-d');
             }
             if ($filter->toDate !== null) {
-                $queryParams['toDate'] = $filter->toDate->format('YYYY-MM-DD');
+                $queryParams['toDate'] = $filter->toDate->format('Y-m-d');
             }
         }
 
@@ -79,13 +71,7 @@ class TrinaxApiClient {
 
         $timeReports = [];
         foreach ($data as $reportData) {
-            $timeReports[] = TimereportDTO::create(
-                $reportData['id'],
-                $reportData['workplace_id'],
-                new DateTimeImmutable($reportData['date']),
-                floatval($reportData['hours']),
-                $reportData['info'] ? : ''
-            );
+            $timeReports[] = TimereportDTO::fromArray($reportData);
         }
 
         return $timeReports;
@@ -104,12 +90,6 @@ class TrinaxApiClient {
 
         $data = json_decode($res->getBody()->getContents(), true);
 
-        return TimereportDTO::create(
-            $data['id'],
-            $data['workplace_id'],
-            new DateTimeImmutable($data['date']),
-            floatval($data['hours']),
-            $data['info'] ? : ''
-        );
+        return TimereportDTO::fromArray($data);
     }
 }

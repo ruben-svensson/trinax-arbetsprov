@@ -12,7 +12,13 @@ final class TimeReportDTO {
         public readonly ?string $info
     ) {}
 
-    public static function create(int $id, int $workplace_id, DateTimeImmutable $date, float $hours, ?string $info): TimeReportDTO {
-        return new self($id, $workplace_id, $date, $hours, $info);
+    public static function fromArray(array $data): self {
+        return new self(
+            $data['id'],
+            $data['workplace_id'],
+            new DateTimeImmutable($data['date']),
+            floatval($data['hours']),
+            $data['info'] ?? null
+        );
     }
 }

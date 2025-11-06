@@ -10,7 +10,11 @@ final class WorkplaceDTO {
         public readonly DateTimeImmutable $createdTime
     ) {}
 
-    public static function create(int $id, string $name, DateTimeImmutable $createdTime): WorkplaceDTO {
-        return new self($id, $name, $createdTime);
+    public static function fromArray(array $data): self {
+        return new self(
+            $data['id'],
+            $data['name'],
+            new DateTimeImmutable($data['created_time'])
+        );
     }
 }
