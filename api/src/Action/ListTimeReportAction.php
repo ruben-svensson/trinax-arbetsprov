@@ -25,15 +25,16 @@ class ListTimeReportAction extends Action {
     private function getAll(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface {
         try {
             $queryParams = $request->getQueryParams();
+            
             $filters = new TimeReportFilterOptions(
                 workplaceId: isset($queryParams['workplaceId']) ? (int)$queryParams['workplaceId'] : null,
                 fromDate: isset($queryParams['from_date']) ? new \DateTimeImmutable($queryParams['from_date']) : null,
                 toDate: isset($queryParams['to_date']) ? new \DateTimeImmutable($queryParams['to_date']) : null,
             );
+
             $timeReports = $this->client->getTimeReports($filters);
             return $this->jsonResponse($response, $timeReports);
         } catch (\Exception $e) {
-            // Handle invalid date format or other exceptions
             return $this->jsonResponse($response, ['error' => 'Invalid query parameters'], 400);
         }
     }
