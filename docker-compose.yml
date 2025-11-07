@@ -1,15 +1,15 @@
 version: '3.8'
 
 services:
-  web:
+  api:
     build:
       context: .
-      dockerfile: ./docker/php/Dockerfile
+      dockerfile: ./docker/api/Dockerfile
     ports:
       - "8000:80"
     volumes:
-      - ./public:/app/public:ro  # Read-only
-      - ./src:/app/src:ro        # Read-only
+      - ./api/public:/app/public:ro  # Read-only
+      - ./api/src:/app/src:ro        # Read-only
       - ./uploads:/app/uploads   # Writable for uploads
     environment:
       - APP_ENV=${APP_ENV}
@@ -17,6 +17,20 @@ services:
       - TRINAX_API_KEY=${TRINAX_API_KEY}
     depends_on:
       - db
+  
+  client:
+    build:
+      context: .
+      dockerfile: ./docker/client/Dockerfile
+    ports:
+      - "5173:5173"  # Vite dev server
+    volumes:
+      - ./client:/app           # Mount source for HMR
+      - /app/node_modules       # Prevent overwriting node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - api
 
   db:
     image: mysql:latest
@@ -39,7 +53,6 @@ services:
       - db
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: root
     
 
 volumes:
