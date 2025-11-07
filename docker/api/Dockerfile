@@ -6,8 +6,8 @@ COPY composer.json composer.lock* ./
 #--no-dev
 RUN composer install  --optimize-autoloader
 
-COPY src/ ./src/
-COPY public/ ./public/
+COPY api/src/ ./src/
+COPY api/public/ ./public/
 
 RUN chown -R application:application /app
 
