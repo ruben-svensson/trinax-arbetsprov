@@ -1,17 +1,21 @@
 <?php declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 
-use App\Api\TrinaxApiClient;
+use App\Api\TrinaxApiService;
+use App\Api\TrinaxApiServiceInterface;
+use App\Api\TrinaxMockApiService;
+use Dotenv\Dotenv;
 use App\Database;
-use App\Factory\HttpClientFactory;
 use DI\Container;
 use DI\ContainerBuilder;
 use Psr\Http\Client\ClientInterface;
 
+use function DI\autowire;
 use function DI\env;
+use function DI\factory;
 
 if (file_exists(__DIR__ . '/../.env')) {
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+    $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
     $dotenv->load();
 }
 
@@ -45,15 +49,23 @@ $containerBuilder->addDefinitions([
         return new PDO($dsn, $user, $pass, $options);
     },
 
-    ClientInterface::class => DI\factory(function (Container $c) {
-        return HttpClientFactory::create(
-            $c->get('app.env'),
-            $c->get(PDO::class) // Pass PDO to the factory
-        );
+    TrinaxApiServiceInterface::class => factory(function (Container $c) {
+        $env = $c->get('app.env');
+        
+        return match ($env) {
+            'development' => new TrinaxMockApiService($c->get(PDO::class)),
+            'production' => new TrinaxApiService(
+                $c->get(ClientInterface::class),
+                $c->get('api.key'),
+                $c->get('api.baseUrl')
+            ),
+            default => throw new \RuntimeException("Unknown environment: {$env}"),
+        };
     }),
 
-    TrinaxApiClient::class => Di\autowire(),
-    Database::class => Di\autowire(),
+    ClientInterface::class => autowire(GuzzleHttp\Client::class),
+
+    Database::class => autowire(),
 ]);
 
 return $containerBuilder->build();
