@@ -17,4 +17,12 @@ final class WorkplaceDTO {
             new DateTimeImmutable($data['created_time'])
         );
     }
+
+    public function toArray(): array {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'created_time' => $this->createdTime->format('Y-m-d H:i:s'),
+        ];
+    }
 }

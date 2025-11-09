@@ -14,11 +14,21 @@ final class TimeReportDTO {
 
     public static function fromArray(array $data): self {
         return new self(
-            $data['id'],
-            $data['workplace_id'],
+            (int) $data['id'],
+            (int) $data['workplace_id'],
             new DateTimeImmutable($data['date']),
-            floatval($data['hours']),
+            (float) $data['hours'],
             $data['info'] ?? null
         );
+    }
+
+    public function toArray(): array {
+        return [
+            'id' => $this->id,
+            'workplace_id' => $this->workplace_id, // camelCase for frontend
+            'date' => $this->date->format('Y-m-d'),
+            'hours' => $this->hours,
+            'info' => $this->info,
+        ];
     }
 }
