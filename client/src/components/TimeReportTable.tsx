@@ -25,6 +25,7 @@ function TimeReportTable({ timeReports, workplacesMap }: TimeReportTableProps) {
         ) : (
           timeReports.map((report) => {
             const workplaceName = workplacesMap.get(report.workplace_id)?.name ?? 'Okänd arbetsplats';
+            const imageUrl = report.image_url || null;
 
             return (
               <tr key={report.id}>
@@ -32,7 +33,15 @@ function TimeReportTable({ timeReports, workplacesMap }: TimeReportTableProps) {
               <td>{workplaceName}</td>
               <td>{report.hours}</td>
               <td>{report.info}</td>
-              <td><img src={report.image} alt="Bildbeskrivning" /></td>
+              <td>
+                {imageUrl ? (
+                  <a href={imageUrl} target="_blank" rel="noopener noreferrer">
+                    <img width="60" src={imageUrl} alt={`Bild för rapport ${report.id}`} />
+                  </a>
+                ) : (
+                  'Ingen bild'
+                )}
+              </td>
             </tr>
             )
           })
