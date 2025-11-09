@@ -18,8 +18,7 @@ CREATE TABLE IF NOT EXISTS `mock_timereports` (
   `date` DATE NOT NULL,
   `hours` DECIMAL(5,2) NOT NULL,
   `info` TEXT DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `workplace_id` (`workplace_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `mock_timereports` (`id`, `workplace_id`, `date`, `hours`, `info`) VALUES
