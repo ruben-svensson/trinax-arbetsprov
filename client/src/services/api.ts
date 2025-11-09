@@ -15,16 +15,16 @@ export const getWorkplaces = (): Promise<Workplace[]> => {
 };
 
 interface TimeReportQueryParams {
-    workplaceId?: number;
-    fromDate?: string;
-    toDate?: string;
+    workplace?: number;
+    from_date?: string;
+    to_date?: string;
 }
 
 export const getTimeReports = (params?: TimeReportQueryParams): Promise<TimeReport[]> => {
     const queryString = new URLSearchParams({
-        ...(params?.workplaceId && { workplace_id: String(params.workplaceId) }),
-        ...(params?.fromDate && { from_date: params.fromDate }),
-        ...(params?.toDate && { to_date: params.toDate }),
+        ...(params?.workplace && { workplace: String(params.workplace) }),
+        ...(params?.from_date && { from_date: params.from_date }),
+        ...(params?.to_date && { to_date: params.to_date }),
     }).toString();
 
     return fetchApi<TimeReport[]>(`timereport?${queryString}`);
