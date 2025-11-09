@@ -34,7 +34,7 @@ class ListTimeReportAction extends Action {
 
             $timeReports = $this->service->getTimeReports($filters);
             return $this->jsonResponse($response, $timeReports);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $this->jsonResponse($response, ['error' => 'Invalid query parameters'], 400);
         }
     }
