@@ -3,6 +3,7 @@ namespace App;
 
 use DI\Attribute\Inject;
 use PDO;
+use RuntimeException;
 
 class Database {
 
@@ -16,7 +17,7 @@ class Database {
         $this->imageTableName = match ($environment) {
             'development' => 'mock_timereport_images',
             'production' => 'timereport_images',
-            default => throw new \RuntimeException('Invalid environment for database service'),
+            default => throw new RuntimeException('Invalid environment for database service'),
         };
     }
     
