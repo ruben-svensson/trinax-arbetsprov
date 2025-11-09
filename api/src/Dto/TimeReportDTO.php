@@ -9,7 +9,8 @@ final class TimeReportDTO {
         public readonly int $workplace_id,
         public readonly DateTimeImmutable $date,
         public readonly float $hours,
-        public readonly ?string $info
+        public readonly ?string $info,
+        public readonly ?string $image_url = null
     ) {}
 
     public static function fromArray(array $data): self {
@@ -18,7 +19,8 @@ final class TimeReportDTO {
             (int) $data['workplace_id'],
             new DateTimeImmutable($data['date']),
             (float) $data['hours'],
-            $data['info'] ?? null
+            $data['info'] ?? null,
+            $data['image_url'] ?? null
         );
     }
 
@@ -29,6 +31,7 @@ final class TimeReportDTO {
             'date' => $this->date->format('Y-m-d'),
             'hours' => $this->hours,
             'info' => $this->info,
+            'image_url' => $this->image_url,
         ];
     }
 }
