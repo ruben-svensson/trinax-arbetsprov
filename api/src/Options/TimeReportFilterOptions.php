@@ -5,26 +5,30 @@ use DateTimeImmutable;
 
 final class TimeReportFilterOptions {
     public function __construct(
-        public readonly ?int $workplaceId = null,
+        public readonly ?int $workplace = null,
         public readonly ?DateTimeImmutable $fromDate = null,
         public readonly ?DateTimeImmutable $toDate = null
     ) {}
 
-    public function toQueryParams(): array {
-        return array_filter([
-            'workplace_id' => $this->workplaceId,
-            'from_date'    => $this->fromDate ? $this->fromDate->format('Y-m-d') : null,
-            'to_date'      => $this->toDate ? $this->toDate->format('Y-m-d') : null,
-        ]);
+    /**
+     * Create from HTTP query parameters
+     */
+    public static function fromQueryParams(array $queryParams): self {
+        return new self(
+            workplace: isset($queryParams['workplace']) ? (int)$queryParams['workplace'] : null,
+            fromDate: isset($queryParams['from_date']) ? new DateTimeImmutable($queryParams['from_date']) : null,
+            toDate: isset($queryParams['to_date']) ? new DateTimeImmutable($queryParams['to_date']) : null,
+        );
     }
 
-    public static function fromArray(string $query): self {
-        parse_str($query, $params);
-
-        return new self(
-            workplaceId: isset($params['workplace_id']) ? (int)$params['workplace_id'] : null,
-            fromDate: isset($params['from_date']) ? new DateTimeImmutable($params['from_date']) : null,
-            toDate: isset($params['to_date']) ? new DateTimeImmutable($params['to_date']) : null,
-        );
+    /**
+     * Convert to query parameters for external API
+     */
+    public function toQueryParams(): array {
+        return array_filter([
+            'workplace' => $this->workplace,
+            'from_date' => $this->fromDate?->format('Y-m-d'),
+            'to_date'   => $this->toDate?->format('Y-m-d'),
+        ]);
     }
 }
