@@ -12,7 +12,7 @@ export interface TimeReport {
     date: string;
     hours: number;
     info?: string;
-    image?: string;
+    image_url?: string;
 }
 
 export interface CreateTimeReportData {
