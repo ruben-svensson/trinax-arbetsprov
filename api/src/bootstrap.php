@@ -56,6 +56,7 @@ $containerBuilder->addDefinitions([
             'development' => new TrinaxMockApiService($c->get(PDO::class)),
             'production' => new TrinaxApiService(
                 $c->get(ClientInterface::class),
+                $c->get(Database::class),
                 $c->get('api.key'),
                 $c->get('api.baseUrl')
             ),
