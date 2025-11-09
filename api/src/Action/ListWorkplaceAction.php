@@ -13,7 +13,7 @@ class ListWorkplaceAction extends Action
     )
     {}
 
-    public function __invoke(ResponseInterface $response)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $workplaces = $this->service->getWorkplaces();
         return $this->jsonResponse($response, $workplaces);
