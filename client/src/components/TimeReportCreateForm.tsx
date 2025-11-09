@@ -87,7 +87,7 @@ function TimeReportCreateForm({onReportCreated}: TimeReportCreateFormProps) {
             <FormGroup label="Arbetsplats:" htmlFor={workplaceId}>
                 <select 
                     id={workplaceId} 
-                    name="workplace_id" 
+                    name="workplace" 
                     value={workplace} 
                     onChange={e => setWorkplace(e.target.value)} 
                     required

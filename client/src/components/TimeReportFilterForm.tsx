@@ -15,19 +15,19 @@ function TimeReportFilterForm({ workplaces, onFilterChange }: TimeReportFilterFo
     const handleWorkplaceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value ? Number(e.target.value) : null;
         setWorkplace(value);
-        onFilterChange?.({ workplaceId: value, fromDate, toDate });
+        onFilterChange?.({ workplace: value, from_date: fromDate, to_date: toDate });
     }
 
     const handleFromDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setFromDate(value);
-        onFilterChange?.({ workplaceId: workplace, fromDate: value, toDate });
+        onFilterChange?.({ workplace: workplace, from_date: value, to_date: toDate });
     }
 
     const handleToDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setToDate(value);
-        onFilterChange?.({ workplaceId: workplace, fromDate, toDate: value });
+        onFilterChange?.({ workplace: workplace, from_date: fromDate, to_date: value });
     }
 
     return (
