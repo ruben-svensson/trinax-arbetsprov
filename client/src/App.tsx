@@ -1,7 +1,6 @@
 import './App.css'
-import TimeReportFilterForm from './components/TimeReportFilterForm'
 import TimeReportCreateForm from './components/TimeReportCreateForm'
-import TimeReportTable from './components/TimeReportTable'
+import TimeReportList from './components/TimeReportList/TimeReportList'
 import useTimeReports from './hooks/useTimeReports';
 import useWorkplaces from './hooks/useWorkplaces';
 import { useMemo, useState } from 'react';
@@ -25,22 +24,14 @@ function App() {
       <div className="layout">
         <div className="column">
           <section>
-            <h2>Filtrera rapporter</h2>
-            <TimeReportFilterForm 
-              workplaces={workplaces} 
-              onFilterChange={setFilters} 
-            />
-          </section>
-          <section>
             <h2>Befintliga rapporter</h2>
-            {isLoading ? (
-              <p>Laddar...</p>
-            ) : (
-              <TimeReportTable 
-                timeReports={timeReports} 
-                workplacesMap={workplacesMap} 
-              />
-            )}
+            <TimeReportList
+              timeReports={timeReports}
+              workplaces={workplaces}
+              workplacesMap={workplacesMap}
+              isLoading={isLoading}
+              onFilterChange={setFilters}
+            />
           </section>
         </div>
 
