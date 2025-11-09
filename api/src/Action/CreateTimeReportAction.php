@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace App\Action;
 
-use App\Api\TrinaxApiClient;
+use App\Api\TrinaxApiServiceInterface;
 use App\Database;
 use App\Dto\CreateTimeReportDTO;
 use InvalidArgumentException;
@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class CreateTimeReportAction extends Action {
 
     public function __construct(
-        private TrinaxApiClient $client,
+        private TrinaxApiServiceInterface $service,
         private Database $database
     )
     {}
@@ -19,13 +19,13 @@ class CreateTimeReportAction extends Action {
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args) {
         try {
             $postData = $request->getParsedBody();
-            $createDto = CreateTimeReportDTO::fromRequest($postData);
+            $createDto = CreateTimeReportDTO::fromArray($postData);
 
-            $newReport = $this->client->createTimeReport($createDto);
+            $newReport = $this->service->createTimeReport($createDto);
 
             $this->database->linkImageToReport($newReport->id, 'test_not_real');
 
-            return $this->jsonResponse($response, $newReport, 201);
+            return $this->jsonResponse($response, null, 201);
         } catch (InvalidArgumentException $e){
             return $this->jsonResponse($response, ['error' => $e->getMessage()], 400);
         }
