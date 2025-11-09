@@ -6,7 +6,7 @@ use DateTimeImmutable;
 final class TimeReportDTO {
     public function __construct(
         public readonly int $id,
-        public readonly int $workplace_id,
+        public readonly int $workplaceId,
         public readonly DateTimeImmutable $date,
         public readonly float $hours,
         public readonly ?string $info,
@@ -27,7 +27,7 @@ final class TimeReportDTO {
     public function toArray(): array {
         return [
             'id' => $this->id,
-            'workplace_id' => $this->workplace_id, // camelCase for frontend
+            'workplace_id' => $this->workplaceId,
             'date' => $this->date->format('Y-m-d'),
             'hours' => $this->hours,
             'info' => $this->info,
