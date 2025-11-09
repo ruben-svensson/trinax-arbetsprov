@@ -12,7 +12,6 @@ function useTimeReports(filters?: TimeReportFilters) {
             setIsLoading(true);
             setError(null);
             
-            // Convert filters to the format the API expects
             const params = filters ? {
                 workplaceId: filters.workplaceId ?? undefined,
                 fromDate: filters.fromDate ?? undefined,
@@ -29,7 +28,6 @@ function useTimeReports(filters?: TimeReportFilters) {
         }
     };
 
-    // Re-fetch whenever filters change
     useEffect(() => {
         fetchTimeReports();
     }, [filters?.workplaceId, filters?.fromDate, filters?.toDate]);
