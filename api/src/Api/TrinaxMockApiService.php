@@ -22,40 +22,75 @@ class TrinaxMockApiService implements TrinaxApiServiceInterface {
 
     public function getTimeReports(?TimeReportFilterOptions $filter = null): array
     {
-        $sql = 'SELECT id, workplace_id, date, hours, info FROM mock_timereports WHERE 1=1';
+        $sql = 'SELECT 
+                    tr.id, 
+                    tr.workplace_id, 
+                    tr.date, 
+                    tr.hours, 
+                    tr.info,
+                    img.filename
+                FROM mock_timereports tr
+                LEFT JOIN mock_timereport_images img ON tr.id = img.timereport_id
+                WHERE 1=1';
         $bindings = [];
 
         if ($filter?->workplaceId !== null) {
-            $sql .= ' AND workplace_id = ?';
+            $sql .= ' AND tr.workplace_id = ?';
             $bindings[] = $filter->workplaceId;
         }
 
         if ($filter?->fromDate !== null) {
-            $sql .= ' AND date >= ?';
+            $sql .= ' AND tr.date >= ?';
             $bindings[] = $filter->fromDate->format('Y-m-d');
         }
 
         if ($filter?->toDate !== null) {
-            $sql .= ' AND date <= ?';
+            $sql .= ' AND tr.date <= ?';
             $bindings[] = $filter->toDate->format('Y-m-d');
         }
 
-        $sql .= ' ORDER BY date DESC';
+        $sql .= ' ORDER BY tr.date DESC';
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($bindings);
         $rows = $stmt->fetchAll();
 
-        return array_map(fn($row) => TimeReportDTO::fromArray($row), $rows);
+        return array_map(function($row) {
+            // Add image_url if an image exists
+            if ($row['filename'] !== null) {
+                $row['image_url'] = "/api/timereport/{$row['id']}/image";
+            }
+            return TimeReportDTO::fromArray($row);
+        }, $rows);
     }
 
     public function getTimeReport(int $id): ?TimeReportDTO
     {
-        $stmt = $this->pdo->prepare('SELECT id, workplace_id, date, hours, info FROM mock_timereports WHERE id = ?');
+        $stmt = $this->pdo->prepare('
+            SELECT 
+                tr.id, 
+                tr.workplace_id, 
+                tr.date, 
+                tr.hours, 
+                tr.info,
+                img.filename
+            FROM mock_timereports tr
+            LEFT JOIN mock_timereport_images img ON tr.id = img.timereport_id
+            WHERE tr.id = ?
+        ');
         $stmt->execute([$id]);
         $row = $stmt->fetch();
 
-        return $row ? TimeReportDTO::fromArray($row) : null;
+        if (!$row) {
+            return null;
+        }
+
+        // Add image_url if an image exists
+        if ($row['filename'] !== null) {
+            $row['image_url'] = "/api/timereport/{$row['id']}/image";
+        }
+
+        return TimeReportDTO::fromArray($row);
     }
 
     public function createTimeReport(CreateTimeReportDTO $timeReport): TimeReportDTO
