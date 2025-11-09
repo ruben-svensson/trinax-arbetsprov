@@ -24,7 +24,7 @@ export interface CreateTimeReportData {
 }
 
 export interface TimeReportFilters {
-  workplaceId?: number | null;
-  fromDate?: string | null;
-  toDate?: string | null;
+  workplace?: number | null;
+  from_date?: string | null;
+  to_date?: string | null;
 }
