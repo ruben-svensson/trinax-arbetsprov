@@ -13,9 +13,9 @@ function useTimeReports(filters?: TimeReportFilters) {
             setError(null);
             
             const params = filters ? {
-                workplaceId: filters.workplaceId ?? undefined,
-                fromDate: filters.fromDate ?? undefined,
-                toDate: filters.toDate ?? undefined,
+                workplace: filters.workplace ?? undefined,
+                from_date: filters.from_date ?? undefined,
+                to_date: filters.to_date ?? undefined,
             } : undefined;
             
             const reports = await getTimeReports(params);
@@ -30,7 +30,7 @@ function useTimeReports(filters?: TimeReportFilters) {
 
     useEffect(() => {
         fetchTimeReports();
-    }, [filters?.workplaceId, filters?.fromDate, filters?.toDate]);
+    }, [filters?.workplace, filters?.from_date, filters?.to_date]);
 
     return { 
         timeReports, 
