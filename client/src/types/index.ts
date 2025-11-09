@@ -14,3 +14,17 @@ export interface TimeReport {
     info?: string;
     image?: string;
 }
+
+export interface CreateTimeReportData {
+    workplace_id: number;
+    date: string;
+    hours: number;
+    info?: string;
+    image?: File;
+}
+
+export interface TimeReportFilters {
+  workplaceId?: number | null;
+  fromDate?: string | null;
+  toDate?: string | null;
+}
