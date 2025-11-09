@@ -12,7 +12,7 @@ final class TimeReportFilterOptions {
 
     public function toQueryParams(): array {
         return array_filter([
-            'workplaceId' => $this->workplaceId,
+            'workplace_id' => $this->workplaceId,
             'from_date'    => $this->fromDate ? $this->fromDate->format('Y-m-d') : null,
             'to_date'      => $this->toDate ? $this->toDate->format('Y-m-d') : null,
         ]);
@@ -22,7 +22,7 @@ final class TimeReportFilterOptions {
         parse_str($query, $params);
 
         return new self(
-            workplaceId: isset($params['workplaceId']) ? (int)$params['workplaceId'] : null,
+            workplaceId: isset($params['workplace_id']) ? (int)$params['workplace_id'] : null,
             fromDate: isset($params['from_date']) ? new DateTimeImmutable($params['from_date']) : null,
             toDate: isset($params['to_date']) ? new DateTimeImmutable($params['to_date']) : null,
         );

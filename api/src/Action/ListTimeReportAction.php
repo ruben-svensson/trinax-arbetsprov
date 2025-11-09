@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 namespace App\Action;
 
-use App\Api\TrinaxApiClient;
+use App\Api\TrinaxApiServiceInterface;
 use App\Options\TimeReportFilterOptions;
-use Psr\Container\ContainerInterface;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ListTimeReportAction extends Action {
 
     public function __construct(
-        private TrinaxApiClient $client,
+        private TrinaxApiServiceInterface $service,
     )
     {}
 
@@ -25,12 +25,14 @@ class ListTimeReportAction extends Action {
     private function getAll(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface {
         try {
             $queryParams = $request->getQueryParams();
+            
             $filters = new TimeReportFilterOptions(
-                workplaceId: isset($queryParams['workplaceId']) ? (int)$queryParams['workplaceId'] : null,
+                workplaceId: isset($queryParams['workplace_id']) ? (int)$queryParams['workplace_id'] : null,
                 fromDate: isset($queryParams['from_date']) ? new \DateTimeImmutable($queryParams['from_date']) : null,
                 toDate: isset($queryParams['to_date']) ? new \DateTimeImmutable($queryParams['to_date']) : null,
             );
-            $timeReports = $this->client->getTimeReports($filters);
+
+            $timeReports = $this->service->getTimeReports($filters);
             return $this->jsonResponse($response, $timeReports);
         } catch (\Exception $e) {
             return $this->jsonResponse($response, ['error' => 'Invalid query parameters'], 400);
@@ -43,7 +45,7 @@ class ListTimeReportAction extends Action {
         }
 
         try {
-            $timeReport = $this->client->getTimeReport($id);
+            $timeReport = $this->service->getTimeReport($id);
             
             if ($timeReport === null) {
                 return $this->jsonResponse($response, ['error' => 'Time report not found'], 404);
@@ -51,7 +53,7 @@ class ListTimeReportAction extends Action {
 
             return $this->jsonResponse($response, $timeReport);
             
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->jsonResponse($response, ['error' => 'Failed to fetch time report'], 500);
         }
     }

@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 -- Mock data to simulate the Trinax API in development
 CREATE TABLE IF NOT EXISTS `mock_workplaces` (
   `id` INT NOT NULL,
