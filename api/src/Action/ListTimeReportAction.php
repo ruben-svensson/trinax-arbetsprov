@@ -24,12 +24,8 @@ class ListTimeReportAction extends Action {
 
     private function getAll(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface {
         try {
-            $queryParams = $request->getQueryParams();
-            
-            $filters = new TimeReportFilterOptions(
-                workplaceId: isset($queryParams['workplace_id']) ? (int)$queryParams['workplace_id'] : null,
-                fromDate: isset($queryParams['from_date']) ? new \DateTimeImmutable($queryParams['from_date']) : null,
-                toDate: isset($queryParams['to_date']) ? new \DateTimeImmutable($queryParams['to_date']) : null,
+            $filters = TimeReportFilterOptions::fromQueryParams(
+                $request->getQueryParams()
             );
 
             $timeReports = $this->service->getTimeReports($filters);
