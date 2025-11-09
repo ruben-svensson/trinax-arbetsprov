@@ -34,9 +34,9 @@ class TrinaxMockApiService implements TrinaxApiServiceInterface {
                 WHERE 1=1';
         $bindings = [];
 
-        if ($filter?->workplaceId !== null) {
+        if ($filter?->workplace !== null) {
             $sql .= ' AND tr.workplace_id = ?';
-            $bindings[] = $filter->workplaceId;
+            $bindings[] = $filter->workplace;
         }
 
         if ($filter?->fromDate !== null) {
@@ -56,7 +56,6 @@ class TrinaxMockApiService implements TrinaxApiServiceInterface {
         $rows = $stmt->fetchAll();
 
         return array_map(function($row) {
-            // Add image_url if an image exists
             if ($row['filename'] !== null) {
                 $row['image_url'] = "/api/timereport/{$row['id']}/image";
             }

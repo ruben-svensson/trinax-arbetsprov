@@ -14,9 +14,9 @@ class TrinaxApiService implements TrinaxApiServiceInterface {
 
     public function __construct(
         private ClientInterface $client,
+        private Database $database,
         #[Inject('api.key')] private string $apiKey,
-        #[Inject('api.baseUrl')] private string $baseUrl,
-        private Database $database // Inject the database to check for images
+        #[Inject('api.baseUrl')] private string $baseUrl
     ) {}
 
     /**
