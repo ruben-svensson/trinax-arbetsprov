@@ -13,7 +13,6 @@ class Database {
         private PDO $pdo,
         #[Inject('app.env')] string $environment
     ) {
-        // Choose the table name based on the environment
         $this->imageTableName = match ($environment) {
             'development' => 'mock_timereport_images',
             'production' => 'timereport_images',
@@ -29,5 +28,16 @@ class Database {
             ':filename' => $filename,
             ':timereport_id' => $reportId,
         ]);
+    }
+
+    public function getImageForReport(int $reportId): ?string {
+        $sql = "SELECT filename FROM {$this->imageTableName} WHERE timereport_id = :timereport_id";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':timereport_id' => $reportId]);
+        
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $result ? $result['filename'] : null;
     }
 }
