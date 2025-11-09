@@ -27,7 +27,7 @@ class ListTimeReportAction extends Action {
             $queryParams = $request->getQueryParams();
             
             $filters = new TimeReportFilterOptions(
-                workplaceId: isset($queryParams['workplaceId']) ? (int)$queryParams['workplaceId'] : null,
+                workplaceId: isset($queryParams['workplace_id']) ? (int)$queryParams['workplace_id'] : null,
                 fromDate: isset($queryParams['from_date']) ? new \DateTimeImmutable($queryParams['from_date']) : null,
                 toDate: isset($queryParams['to_date']) ? new \DateTimeImmutable($queryParams['to_date']) : null,
             );
