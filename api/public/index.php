@@ -3,6 +3,7 @@
 use App\Action\ListWorkplaceAction;
 use App\Action\ListTimeReportAction;
 use App\Action\CreateTimeReportAction;
+use App\Action\ListTimeReportImageAction;
 use Slim\Factory\AppFactory;
 
 $container = require __DIR__ . '/../src/bootstrap.php';
@@ -27,6 +28,7 @@ $errorMiddleware = $app->addErrorMiddleware(
 );
 
 $app->get('/api/workplace', ListWorkplaceAction::class);
+$app->get('/api/timereport/{id}/image', ListTimeReportImageAction::class);
 $app->get('/api/timereport[/{id}]', ListTimeReportAction::class);
 $app->post('/api/timereport', CreateTimeReportAction::class);
 
