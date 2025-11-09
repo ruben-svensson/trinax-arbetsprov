@@ -33,7 +33,6 @@ class ListTimeReportAction extends Action {
             $timeReports = $this->client->getTimeReports($filters);
             return $this->jsonResponse($response, $timeReports);
         } catch (\Exception $e) {
-            // Handle invalid date format or other exceptions
             return $this->jsonResponse($response, ['error' => 'Invalid query parameters'], 400);
         }
     }
