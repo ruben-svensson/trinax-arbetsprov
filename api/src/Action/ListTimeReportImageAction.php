@@ -12,7 +12,6 @@ class ListTimeReportImageAction extends Action {
     ) {}
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface {
-        // Validate the ID parameter
         if (!isset($args['id']) || !is_numeric($args['id'])) {
             return $this->jsonResponse($response, ['error' => 'Invalid time report ID'], 400);
         }
