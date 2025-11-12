@@ -6,8 +6,7 @@ use App\Dto\TimeReportDTO;
 use App\Dto\WorkplaceDTO;
 use App\Options\TimeReportFilterOptions;
 
-interface TrinaxApiServiceInterface
-{
+interface TrinaxApiServiceInterface {
     /**
      * @return WorkplaceDTO[]
      */
