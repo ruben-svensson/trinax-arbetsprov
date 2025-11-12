@@ -4,8 +4,7 @@ namespace App\Action;
 use Psr\Http\Message\ResponseInterface;
 
 abstract class Action {
-    protected function jsonResponse(ResponseInterface $response, mixed $data, int $status = 200): ResponseInterface
-    {
+    protected function jsonResponse(ResponseInterface $response, mixed $data, int $status = 200): ResponseInterface {
         if (is_array($data)) {
             $data = array_map(function ($item) {
                 return method_exists($item, 'toArray') ? $item->toArray() : $item;
