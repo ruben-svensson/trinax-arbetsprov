@@ -13,15 +13,13 @@ class TrinaxMockApiService implements TrinaxApiServiceInterface {
         private PDO $pdo,
     ) {}
 
-    public function getWorkplaces(): array
-    {
+    public function getWorkplaces(): array {
         $stmt = $this->pdo->query('SELECT id, name, created_time FROM mock_workplaces ORDER BY id');
         $rows = $stmt->fetchAll();
         return array_map(fn($row) => WorkplaceDTO::fromArray($row), $rows);
     }
 
-    public function getTimeReports(?TimeReportFilterOptions $filter = null): array
-    {
+    public function getTimeReports(?TimeReportFilterOptions $filter = null): array {
         $sql = 'SELECT 
                     tr.id, 
                     tr.workplace_id, 
